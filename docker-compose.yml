@@ -1,7 +1,7 @@
-version: '3'
+version: '3.8'
 
 services:
-  ned-cars:
+  server:
     image: nginx:latest
     ports:
       - "8000:80"
@@ -11,10 +11,25 @@ services:
     depends_on:
       - app
     container_name: ned-cars_nginx
+
   app:
     build:
         context: .
         dockerfile: _docker/app/Dockerfile
     volumes:
       - ./:/var/www/
+    depends_on:
+      - db
     container_name: ned-cars_app
+
+  db:
+    image: mysql:latest
+    restart: always
+    volumes:
+      - ./tmp/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: ned-cars
+    ports:
+      - "9906:3306"
+    container_name: ned-cars_db
