@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  ned-cars:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./_docker/nginx/conf.d/:/etc/nginx/conf.d
+    depends_on:
+      - app
+    container_name: ned-cars_nginx
+  app:
+    build:
+        context: .
+        dockerfile: _docker/app/Dockerfile
+    volumes:
+      - ./:/var/www/
+    container_name: ned-cars_app
